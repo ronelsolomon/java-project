@@ -1,13 +1,13 @@
 package com.example.emotiondetector.di
 
 import android.content.Context
-import androidx.work.WorkManager
 import com.example.emotiondetector.data.ModelManager
 import com.example.emotiondetector.data.ModelPreferences
 import com.example.emotiondetector.data.SecureStorage
 import com.example.emotiondetector.data.TelemetryManager
 import com.example.emotiondetector.domain.EmotionDetector
 import com.example.emotiondetector.security.KeyManager
+import com.example.emotiondetector.util.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -127,5 +127,61 @@ object AppModule {
             .build()
     }
     
-    // Add other dependencies as needed
+    @Provides
+    @Singleton
+    fun provideAppLogger(
+        @ApplicationContext context: Context,
+        fileUtils: FileUtils
+    ): AppLogger {
+        return AppLogger(context, fileUtils)
+    }
+
+    @Provides
+    @Singleton
+    fun providePrefs(@ApplicationContext context: Context): Prefs {
+        return Prefs(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideJsonUtils(): JsonUtils {
+        return JsonUtils()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideFileUtils(@ApplicationContext context: Context): FileUtils {
+        return FileUtils(context)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideNetworkUtils(
+        @ApplicationContext context: Context,
+        fileUtils: FileUtils,
+        appLogger: AppLogger
+    ): NetworkUtils {
+        return NetworkUtils(context, fileUtils, appLogger)
+    }
+    
+    @Provides
+    @Singleton
+    fun providePermissionUtils(): PermissionUtils {
+        return PermissionUtils
+    }
+    
+    @Provides
+    @Singleton
+    fun provideDateTimeUtils(): DateTimeUtils {
+        return DateTimeUtils
+    }
+    
+    @Provides
+    @Singleton
+    fun provideImageUtils(
+        @ApplicationContext context: Context,
+        fileUtils: FileUtils
+    ): ImageUtils {
+        return ImageUtils(context, fileUtils)
+    }
 }

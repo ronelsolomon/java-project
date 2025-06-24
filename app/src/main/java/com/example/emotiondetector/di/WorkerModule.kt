@@ -1,9 +1,8 @@
 package com.example.emotiondetector.di
 
 import android.content.Context
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.ListenableWorker
-import androidx.worker.WorkerFactory
+import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.example.emotiondetector.worker.DownloadModelWorker
 import com.example.emotiondetector.worker.ModelUpdateWorker
@@ -11,10 +10,10 @@ import com.example.emotiondetector.worker.UploadTelemetryWorker
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
+import kotlin.reflect.KClass
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -82,6 +81,28 @@ interface WorkerModule {
     @IntoMap
     @WorkerKey(UploadTelemetryWorker::class)
     fun bindUploadTelemetryWorker(factory: UploadTelemetryWorker.Factory): ChildWorkerFactory
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+    @Provides
+    @Singleton
+    fun provideAppLogger(context: Context, fileUtils: FileUtils): AppLogger {
+        return AppLogger(context, fileUtils)
+    }
+
+    @Provides
+    @Singleton
+    fun providePrefs(context: Context): Prefs {
+        return Prefs(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideJsonUtils(): JsonUtils {
+        return JsonUtils()
+    }
 }
 
 /**
